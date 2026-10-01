@@ -132,9 +132,10 @@
                         <label id="label-datetime" class="header-input-label">Date & Time</label>
                         <input type="date" id="targetDate" class="header-input w-36 cursor-pointer">
                         <input type="time" id="targetTime" class="header-input w-28 cursor-pointer">
-                        <div class="flex gap-1 mb-1 ml-1">
-                            <button id="setNowBtn" class="text-xs text-amber-700 hover:text-amber-900 font-bold uppercase tracking-wider border border-amber-200 px-3 py-1.5 rounded hover:bg-amber-50 transition-colors mb-1 ml-1">Now</button>
-                            <button id="togglePlayBtn" class="text-xs text-indigo-700 hover:text-indigo-900 font-bold border border-indigo-200 px-3 py-1.5 rounded hover:bg-indigo-50 transition-colors flex items-center justify-center w-10">
+                        <div class="flex items-center gap-1.5 mb-1 ml-1">
+                            <button id="setNowBtn" class="text-xs text-amber-700 hover:text-amber-900 font-bold uppercase tracking-wider border border-amber-200 px-3 py-1.5 rounded hover:bg-amber-50 transition-colors">Now</button>
+                            <select id="playSpeed" class="text-xs border border-slate-300 rounded px-2 py-1.5 bg-white text-slate-700 outline-none focus:border-indigo-500 cursor-pointer shadow-sm"></select>
+                            <button id="togglePlayBtn" title="Play / Pause" class="text-xs text-indigo-700 hover:text-indigo-900 font-bold border border-indigo-200 px-2.5 py-1.5 rounded hover:bg-indigo-50 transition-colors flex items-center justify-center">
                                 <svg id="icon-play" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
                                 <svg id="icon-pause" class="hidden" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
                             </button>
@@ -189,32 +190,91 @@
                         </select>
                     </div>
 
-                    <div class="flex items-center justify-between mb-4">
-                        <span id="label-show-asc-line" class="text-xs font-bold text-slate-700">Show ASC Line</span>
-                        <label class="switch">
-                            <input type="checkbox" id="toggleAscLine" checked>
-                            <span class="slider"></span>
-                        </label>
+                    <div class="space-y-3 mb-4">
+                        <div class="flex items-center justify-between">
+                            <span id="label-show-asc-line" class="text-xs font-bold text-slate-700">Show ASC Line</span>
+                            <label class="switch">
+                                <input type="checkbox" id="toggleAscLine" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span id="label-show-mc-line" class="text-xs font-bold text-slate-700">Show MC Line</span>
+                            <label class="switch">
+                                <input type="checkbox" id="toggleMcLine" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span id="label-show-retrograde" class="text-xs font-bold text-slate-700">Retrograde (℞)</span>
+                            <label class="switch">
+                                <input type="checkbox" id="toggleRetrograde" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span id="label-show-elements" class="text-xs font-bold text-slate-700">Elements & Qualities</span>
+                            <label class="switch">
+                                <input type="checkbox" id="toggleElements" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span id="label-show-dignities" class="text-xs font-bold text-slate-700">Essential Dignities</span>
+                            <label class="switch">
+                                <input type="checkbox" id="toggleDignities" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span id="label-show-patterns" class="text-xs font-bold text-slate-700">Aspect Patterns</span>
+                            <label class="switch">
+                                <input type="checkbox" id="togglePatterns" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
                     </div>
                     <div id="aspect-toggles" class="space-y-3 pl-1 border-t border-slate-100 pt-3"></div>
                 </div>
 
+                <!-- 4元素・3区分バランス -->
+                <div id="elementsCard" class="bg-white p-4 rounded shadow-sm border border-slate-200">
+                    <p id="label-elements-header" class="text-xs uppercase tracking-widest font-bold text-slate-500 mb-3 border-b border-slate-100 pb-1">Elements & Qualities</p>
+                    <div class="space-y-3">
+                        <div>
+                            <span id="label-4elements" class="block text-[10px] font-bold text-slate-400 uppercase mb-1.5">Elements</span>
+                            <div class="grid grid-cols-2 gap-1.5 text-center text-xs" id="elementsGrid"></div>
+                        </div>
+                        <div class="pt-2 border-t border-slate-100">
+                            <span id="label-3qualities" class="block text-[10px] font-bold text-slate-400 uppercase mb-1.5">Qualities</span>
+                            <div class="grid grid-cols-3 gap-1 text-center text-xs" id="qualitiesGrid"></div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- 天体位置リスト -->
                 <div class="bg-white p-4 rounded shadow-sm border border-slate-200">
-                    <p id="label-data-header" class="text-xs uppercase tracking-widest font-bold text-slate-700 mb-3 border-b border-slate-100 pb-1">Positions</p>
+                    <div class="flex justify-between items-center mb-3 border-b border-slate-100 pb-1">
+                        <p id="label-data-header" class="text-xs uppercase tracking-widest font-bold text-slate-700">Positions</p>
+                        <span id="label-dignity-legend" class="text-[9px] text-slate-400">👑Dom ⭐Exalt ⚠️Det 🔻Fall</span>
+                    </div>
                     <div id="ascendant-info" class="text-xs font-bold text-indigo-600 mb-2"></div>
                     <div id="planetList" class="text-slate-700 space-y-1 text-xs leading-tight"></div>
                 </div>
             </div>
 
             <!-- メインチャートエリア -->
-            <div class="lg:col-span-10 space-y-8 order-1 lg:order-2">
+            <div class="lg:col-span-10 space-y-4 order-1 lg:order-2">
                 <div class="bg-white p-2 md:p-4 rounded-xl shadow-sm border border-slate-200 flex flex-col items-center min-h-[600px] overflow-hidden">
                     <div class="chart-container">
                         <canvas id="horoscopeCanvas"></canvas>
                     </div>
+                    
+                    <!-- 複合アスペクト表示エリア -->
+                    <div id="aspectPatternsArea" class="w-full mt-4 p-2.5 rounded-lg bg-slate-50 border border-slate-100 flex flex-wrap gap-2 items-center min-h-[36px]"></div>
+
                     <!-- アスペクト結果一覧 -->
-                    <div id="aspectResults" class="w-full mt-6 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-x-4 gap-y-2 text-xs font-medium text-slate-600"></div>
+                    <div id="aspectResults" class="w-full mt-4 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-x-4 gap-y-2 text-xs font-medium text-slate-600"></div>
                 </div>
             </div>
         </div>
@@ -247,21 +307,76 @@
         const i18n = {
             ja: {
                 title: "Horoscope Generator", subtitle: "天体配置図ジェネレーター",
-                labelDateTime: "日時", labelTz: "タイムゾーン", labelSettingsModal: "設定", labelRotation: "チャート回転基準", labelShowAscLine: "ASCライン表示", labelCity: "都市", labelLat: "緯度", labelLon: "経度", setNow: "現在", dataHeader: "天体位置", aspectHeader: "主なアスペクト", noAspects: "アスペクトなし", labelSettings: "表示設定", orb: "許容", asc: "ASC", labelJpCalendar: "日本の暦", lblKyuureki: "旧暦", lblRokuyo: "六曜", lblEto: "日干支", lblChoku: "十二直",
-                planets: { Sun: "太陽", Moon: "月", Mercury: "水星", Venus: "金星", Mars: "火星", Jupiter: "木星", Saturn: "土星", Uranus: "天王星", Neptune: "海王星", Pluto: "冥王星", Ceres: "ケレス", Pallas: "パラス", Juno: "ジュノー", Vesta: "ベスタ", Chiron: "キロン" },
+                labelDateTime: "日時", labelTz: "タイムゾーン", labelSettingsModal: "設定", labelRotation: "チャート回転基準", 
+                labelShowAscLine: "ASCライン表示", labelShowMcLine: "MCライン表示", 
+                labelShowRetrograde: "天体の逆行 (℞)", labelShowElements: "4元素・3区分", 
+                labelShowDignities: "天体の品位", labelShowPatterns: "複合アスペクト",
+                labelElementsHeader: "4元素と3区分のバランス", label4Elements: "4元素 (エレメント)", label3Qualities: "3区分 (クオリティ)",
+                labelDignityLegend: "👑本来 ⭐高揚 ⚠️障害 🔻下降",
+                labelCity: "都市", labelLat: "緯度", labelLon: "経度", setNow: "現在", dataHeader: "天体・感受点位置", aspectHeader: "主なアスペクト", noAspects: "アスペクトなし", labelSettings: "表示設定", orb: "許容", asc: "ASC", mc: "MC", labelJpCalendar: "日本の暦", lblKyuureki: "旧暦", lblRokuyo: "六曜", lblEto: "日干支", lblChoku: "十二直",
+                speeds: { m10: "10分 / 秒 (超低速)", h1: "1時間 / 秒 (ゆっくり)", d1: "1日 / 秒 (標準)", w1: "1週間 / 秒 (高速)", mo1: "1ヶ月 / 秒 (超高速)" },
+                planets: { 
+                    Sun: "太陽", Moon: "月", Mercury: "水星", Venus: "金星", Mars: "火星", Jupiter: "木星", Saturn: "土星", Uranus: "天王星", Neptune: "海王星", Pluto: "冥王星", 
+                    Ceres: "ケレス", Pallas: "パラス", Juno: "ジュノー", Vesta: "ベスタ", Chiron: "キロン",
+                    Node: "ドラゴンヘッド", SouthNode: "ドラゴンテール", Lilith: "リリス", Fortune: "幸運位(PoF)"
+                },
                 signs: ["牡羊座", "牡牛座", "双子座", "蟹座", "獅子座", "乙女座", "天秤座", "蠍座", "射手座", "山羊座", "水瓶座", "魚座"],
+                elementNames: { Fire: "火", Earth: "地", Air: "風", Water: "水" },
+                qualityNames: { Cardinal: "活動宮", Fixed: "不動宮", Mutable: "柔軟宮" },
+                dignityNames: { dom: "本来", exalt: "高揚", detriment: "障害", fall: "下降" },
+                patterns: {
+                    GrandTrine: "グランドトライン",
+                    Kite: "カイト",
+                    TSquare: "Tスクエア",
+                    GrandCross: "グランドクロス",
+                    Yod: "ヨード (神の指)",
+                    MysticRectangle: "ミスティック・レクタングル",
+                    none: "複合アスペクトなし"
+                },
                 aspectNames: { Conjunction: "合(0°)", Opposition: "衝(180°)", Trine: "三分(120°)", Square: "四分(90°)", Sextile: "六分(60°)" }
             },
             en: {
                 title: "Horoscope Generator", subtitle: "Astrological Chart Generator",
-                labelDateTime: "Date & Time", labelTz: "Timezone", labelSettingsModal: "Settings", labelRotation: "Rotation", labelShowAscLine: "Show ASC Line", labelCity: "City", labelLat: "Lat", labelLon: "Lon", setNow: "NOW", dataHeader: "Positions", aspectHeader: "Aspects", noAspects: "None.", labelSettings: "Settings", orb: "orb", asc: "ASC", labelJpCalendar: "J-Calendar", lblKyuureki: "Lunar", lblRokuyo: "Rokuyo", lblEto: "Eto", lblChoku: "Choku",
-                planets: { Sun: "Sun", Moon: "Moon", Mercury: "Mercury", Venus: "Venus", Mars: "Mars", Jupiter: "Jupiter", Saturn: "Saturn", Uranus: "Uranus", Neptune: "Neptune", Pluto: "Pluto", Ceres: "Ceres", Pallas: "Pallas", Juno: "Juno", Vesta: "Vesta", Chiron: "Chiron" },
+                labelDateTime: "Date & Time", labelTz: "Timezone", labelSettingsModal: "Settings", labelRotation: "Rotation", 
+                labelShowAscLine: "Show ASC Line", labelShowMcLine: "Show MC Line", 
+                labelShowRetrograde: "Retrograde (℞)", labelShowElements: "Elements & Qualities", 
+                labelShowDignities: "Essential Dignities", labelShowPatterns: "Aspect Patterns",
+                labelElementsHeader: "Elements & Qualities", label4Elements: "4 Elements", label3Qualities: "3 Qualities",
+                labelDignityLegend: "👑Dom ⭐Exalt ⚠️Det 🔻Fall",
+                labelCity: "City", labelLat: "Lat", labelLon: "Lon", setNow: "NOW", dataHeader: "Positions", aspectHeader: "Aspects", noAspects: "None.", labelSettings: "Settings", orb: "orb", asc: "ASC", mc: "MC", labelJpCalendar: "J-Calendar", lblKyuureki: "Lunar", lblRokuyo: "Rokuyo", lblEto: "Eto", lblChoku: "Choku",
+                speeds: { m10: "10m / s (Very Slow)", h1: "1h / s (Slow)", d1: "1d / s (Normal)", w1: "1w / s (Fast)", mo1: "1mo / s (Very Fast)" },
+                planets: { 
+                    Sun: "Sun", Moon: "Moon", Mercury: "Mercury", Venus: "Venus", Mars: "Mars", Jupiter: "Jupiter", Saturn: "Saturn", Uranus: "Uranus", Neptune: "Neptune", Pluto: "Pluto", 
+                    Ceres: "Ceres", Pallas: "Pallas", Juno: "Juno", Vesta: "Vesta", Chiron: "Chiron",
+                    Node: "North Node", SouthNode: "South Node", Lilith: "Lilith", Fortune: "Part of Fortune"
+                },
                 signs: ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"],
+                elementNames: { Fire: "Fire", Earth: "Earth", Air: "Air", Water: "Water" },
+                qualityNames: { Cardinal: "Cardinal", Fixed: "Fixed", Mutable: "Mutable" },
+                dignityNames: { dom: "Dom", exalt: "Exalt", detriment: "Det", fall: "Fall" },
+                patterns: {
+                    GrandTrine: "Grand Trine",
+                    Kite: "Kite",
+                    TSquare: "T-Square",
+                    GrandCross: "Grand Cross",
+                    Yod: "Yod",
+                    MysticRectangle: "Mystic Rectangle",
+                    none: "No patterns"
+                },
                 aspectNames: { Conjunction: "Conj", Opposition: "Opp", Trine: "Trine", Square: "Square", Sextile: "Sextile" }
             }
         };
 
-        let currentLang = 'ja', chartRotationMode = 'aries', showAscLine = true;
+        const SPEED_OPTIONS = [
+            { value: 600, key: "m10" },
+            { value: 3600, key: "h1" },
+            { value: 86400, key: "d1" },
+            { value: 604800, key: "w1" },
+            { value: 2592000, key: "mo1" }
+        ];
+
+        let currentLang = 'ja', chartRotationMode = 'aries', showAscLine = true, showMcLine = true, selectedSpeed = 3600;
+        let showRetrograde = true, showElements = true, showDignities = true, showPatterns = true;
         let aspectVisibility = { Conjunction: false, Opposition: false, Trine: false, Square: false, Sextile: false };
         
         const PLANET_DEFS = [
@@ -272,7 +387,12 @@
             { id: "Vesta", symbol: "⚶", color: "#b91c1c" }, { id: "Jupiter", symbol: "♃", color: "#7e22ce" }, 
             { id: "Saturn", symbol: "♄", color: "#334155" }, { id: "Chiron", symbol: "⚷", color: "#0f766e" },
             { id: "Uranus", symbol: "♅", color: "#0369a1" }, { id: "Neptune", symbol: "♆", color: "#1d4ed8" }, 
-            { id: "Pluto", symbol: "♇", color: "#1e1b4b" }
+            { id: "Pluto", symbol: "♇", color: "#1e1b4b" },
+            // 感受点
+            { id: "Node", symbol: "☊", color: "#4338ca" },
+            { id: "SouthNode", symbol: "☋", color: "#64748b" },
+            { id: "Lilith", symbol: "⚸", color: "#701a75" },
+            { id: "Fortune", symbol: "⨁", color: "#ca8a04" }
         ];
 
         const ASPECT_DEFS = [
@@ -284,12 +404,238 @@
         const ZODIAC_PATHS = ["M12 21V10 M6 9c0 4.5 6 3 6-1 0 4 6 5.5 6 1", "M12 21V10 M12 10a4 4 0 1 0 0-8 4 4 0 0 0 0 8 M5 6c0-3 3-4 7-4s7 1 7 4", "M6 4v16 M18 4v16 M6 4c6 2 12 0 12 0 M6 20c6-2 12 0 12 0", "M6 6c6 0 6 9 0 9s-6-9 0-9 M18 18c-6 0-6-9 0-9s6 9 0 9", "M6 18c0-4 2-6 6-6 4 0 6-3 6-6s-2-4-4-4-3 1-3 3 M18 18a2 2 0 1 0 0-4 2 2 0 0 0 0 4", "M5 6c3 0 3 5 3 5s0-5 3-5 3 5 3 5v7c0 2-2 4-5 0 M14 11c0 3 3 4 4 0", "M5 19h14 M5 15h14 M12 15a4 4 0 0 1 0-8 4 4 0 0 1 0 8", "M6 6v8c0 3 3 3 3 0v-8c0 3 3 3 3 0v8c0 3 3 3 3 0v2l3 3", "M7 17l10-10 M17 7v5 M17 7h-5 M4 20l4-4", "M4 15a3 3 0 0 1 3-3h.5a2.5 2.5 0 0 1 2.5 2.5V17a3.5 3.5 0 0 0 3.5 3.5h.5a3 3 0 0 0 3-3c0-3-2.5-4-5-4v-3a5 5 0 0 0-5-5h-.5a5.5 5.5 0 0 0-5.5 5.5V18", "M4 10l3-3 3 3 3-3 3 3 3-3 M4 16l3-3 3 3 3-3 3 3 3-3", "M6 6c4 4 4 8 0 12 M18 6c-4 4-4 8 0 12 M5 12h14"];
         const ASTEROID_ELEMENTS = { "Ceres": { a: 2.766, e: 0.0758, i: 10.59, N: 80.33, w: 73.51, M: 77.37 }, "Pallas": { a: 2.773, e: 0.231, i: 34.84, N: 173.08, w: 310.05, M: 96.98 }, "Juno": { a: 2.670, e: 0.255, i: 12.97, N: 169.85, w: 248.42, M: 41.53 }, "Vesta": { a: 2.362, e: 0.0886, i: 7.14, N: 103.81, w: 151.20, M: 20.85 }, "Chiron": { a: 13.70, e: 0.383, i: 6.93, N: 209.32, w: 339.56, M: 8.5 } };
 
-        let planetData = [], ascendantDeg = 0, hitZones = [], isPlaying = false, animationFrameId = null, lastTimestamp = 0;
+        const SIGN_ELEMENT_NAMES = ["Fire", "Earth", "Air", "Water", "Fire", "Earth", "Air", "Water", "Fire", "Earth", "Air", "Water"];
+        const SIGN_QUALITY_NAMES = ["Cardinal", "Fixed", "Mutable", "Cardinal", "Fixed", "Mutable", "Cardinal", "Fixed", "Mutable", "Cardinal", "Fixed", "Mutable"];
+
+        const DIGNITIES = {
+            Sun:     { dom: [4],    exalt: [0],  detriment: [10],    fall: [6] },
+            Moon:    { dom: [3],    exalt: [1],  detriment: [9],     fall: [7] },
+            Mercury: { dom: [2, 5], exalt: [5],  detriment: [8, 11], fall: [11] },
+            Venus:   { dom: [1, 6], exalt: [11], detriment: [7, 0],  fall: [5] },
+            Mars:    { dom: [0, 7], exalt: [9],  detriment: [6, 1],  fall: [3] },
+            Jupiter: { dom: [8, 11],exalt: [3],  detriment: [2, 5],  fall: [9] },
+            Saturn:  { dom: [9, 10],exalt: [6],  detriment: [3, 4],  fall: [0] },
+            Uranus:  { dom: [10],   exalt: [7],  detriment: [4],     fall: [1] },
+            Neptune: { dom: [11],   exalt: [4],  detriment: [5],     fall: [10] },
+            Pluto:   { dom: [7],    exalt: [0],  detriment: [1],     fall: [6] }
+        };
+
+        function getDignity(planetId, signIdx) {
+            const d = DIGNITIES[planetId];
+            if (!d) return null;
+            if (d.dom && d.dom.includes(signIdx)) return { key: 'dom', labelJa: '本来', labelEn: 'Dom', icon: '👑', color: 'text-amber-600 bg-amber-50 border-amber-200' };
+            if (d.exalt && d.exalt.includes(signIdx)) return { key: 'exalt', labelJa: '高揚', labelEn: 'Exalt', icon: '⭐', color: 'text-purple-600 bg-purple-50 border-purple-200' };
+            if (d.detriment && d.detriment.includes(signIdx)) return { key: 'detriment', labelJa: '障害', labelEn: 'Det', icon: '⚠️', color: 'text-orange-600 bg-orange-50 border-orange-200' };
+            if (d.fall && d.fall.includes(signIdx)) return { key: 'fall', labelJa: '下降', labelEn: 'Fall', icon: '🔻', color: 'text-rose-600 bg-rose-50 border-rose-200' };
+            return null;
+        }
+
+        function angleDiff(a, b) {
+            const d = Math.abs(a - b) % 360;
+            return d > 180 ? 360 - d : d;
+        }
+
+        function hasAspect(p1, p2, targetAngle, orb = 7) {
+            return Math.abs(angleDiff(p1.longitude, p2.longitude) - targetAngle) <= orb;
+        }
+
+        function countElementsAndQualities(planets) {
+            const mainIds = ["Sun", "Moon", "Mercury", "Venus", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune", "Pluto"];
+            const elements = { Fire: 0, Earth: 0, Air: 0, Water: 0 };
+            const qualities = { Cardinal: 0, Fixed: 0, Mutable: 0 };
+
+            planets.forEach(p => {
+                if (!mainIds.includes(p.id)) return;
+                const signIdx = Math.floor(p.longitude / 30);
+                elements[SIGN_ELEMENT_NAMES[signIdx]]++;
+                qualities[SIGN_QUALITY_NAMES[signIdx]]++;
+            });
+
+            return { elements, qualities };
+        }
+
+        function detectAspectPatterns(planets) {
+            const mainIds = ["Sun", "Moon", "Mercury", "Venus", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune", "Pluto"];
+            const pList = planets.filter(p => mainIds.includes(p.id));
+            const n = pList.length;
+            const patterns = [];
+            const seenKeys = new Set();
+
+            // 1. グランドトライン & カイト
+            for (let i = 0; i < n; i++) {
+                for (let j = i + 1; j < n; j++) {
+                    if (!hasAspect(pList[i], pList[j], 120, 8)) continue;
+                    for (let k = j + 1; k < n; k++) {
+                        if (hasAspect(pList[j], pList[k], 120, 8) && hasAspect(pList[k], pList[i], 120, 8)) {
+                            const gtPlanets = [pList[i], pList[j], pList[k]];
+                            const gtIds = gtPlanets.map(p => p.id).sort();
+
+                            const elemCounts = { Fire: 0, Earth: 0, Air: 0, Water: 0 };
+                            gtPlanets.forEach(p => elemCounts[SIGN_ELEMENT_NAMES[Math.floor(p.longitude / 30)]]++);
+                            let dominantElem = Object.keys(elemCounts).find(e => elemCounts[e] >= 2) || "Mixed";
+
+                            let kiteFound = false;
+                            for (let m = 0; m < n; m++) {
+                                if (m === i || m === j || m === k) continue;
+                                const p4 = pList[m];
+                                for (let oppIdx = 0; oppIdx < 3; oppIdx++) {
+                                    const oppP = gtPlanets[oppIdx];
+                                    const s1 = gtPlanets[(oppIdx + 1) % 3];
+                                    const s2 = gtPlanets[(oppIdx + 2) % 3];
+                                    if (hasAspect(p4, oppP, 180, 8) && hasAspect(p4, s1, 60, 6) && hasAspect(p4, s2, 60, 6)) {
+                                        const kiteKey = `Kite-${[...gtIds, p4.id].sort().join('-')}`;
+                                        if (!seenKeys.has(kiteKey)) {
+                                            seenKeys.add(kiteKey);
+                                            patterns.push({
+                                                type: 'Kite',
+                                                nameJa: 'カイト',
+                                                nameEn: 'Kite',
+                                                planets: [oppP, s1, s2, p4],
+                                                head: p4,
+                                                tail: oppP,
+                                                element: dominantElem,
+                                                badgeClass: 'bg-indigo-50 text-indigo-700 border-indigo-200'
+                                            });
+                                        }
+                                        kiteFound = true;
+                                    }
+                                }
+                            }
+
+                            if (!kiteFound) {
+                                const gtKey = `GT-${gtIds.join('-')}`;
+                                if (!seenKeys.has(gtKey)) {
+                                    seenKeys.add(gtKey);
+                                    patterns.push({
+                                        type: 'GrandTrine',
+                                        nameJa: `グランドトライン (${dominantElem})`,
+                                        nameEn: `Grand Trine (${dominantElem})`,
+                                        planets: gtPlanets,
+                                        element: dominantElem,
+                                        badgeClass: 'bg-blue-50 text-blue-700 border-blue-200'
+                                    });
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // 2. グランドクロス & Tスクエア
+            for (let i = 0; i < n; i++) {
+                for (let j = i + 1; j < n; j++) {
+                    if (!hasAspect(pList[i], pList[j], 180, 8)) continue;
+                    const oppP1 = pList[i];
+                    const oppP2 = pList[j];
+
+                    for (let k = 0; k < n; k++) {
+                        if (k === i || k === j) continue;
+                        const apex = pList[k];
+                        if (hasAspect(apex, oppP1, 90, 7) && hasAspect(apex, oppP2, 90, 7)) {
+                            let crossFound = false;
+                            for (let m = k + 1; m < n; m++) {
+                                if (m === i || m === j) continue;
+                                const apex2 = pList[m];
+                                if (hasAspect(apex2, oppP1, 90, 7) && hasAspect(apex2, oppP2, 90, 7) && hasAspect(apex, apex2, 180, 8)) {
+                                    const crossKey = `Cross-${[oppP1.id, oppP2.id, apex.id, apex2.id].sort().join('-')}`;
+                                    if (!seenKeys.has(crossKey)) {
+                                        seenKeys.add(crossKey);
+                                        patterns.push({
+                                            type: 'GrandCross',
+                                            nameJa: 'グランドクロス',
+                                            nameEn: 'Grand Cross',
+                                            planets: [oppP1, apex, oppP2, apex2],
+                                            badgeClass: 'bg-red-50 text-red-700 border-red-200'
+                                        });
+                                    }
+                                    crossFound = true;
+                                    break;
+                                }
+                            }
+                            if (!crossFound) {
+                                const tKey = `TSquare-${[oppP1.id, oppP2.id].sort().join('-')}-${apex.id}`;
+                                if (!seenKeys.has(tKey)) {
+                                    seenKeys.add(tKey);
+                                    patterns.push({
+                                        type: 'TSquare',
+                                        nameJa: `Tスクエア (Apex: ${apex.id})`,
+                                        nameEn: `T-Square (Apex: ${apex.id})`,
+                                        planets: [oppP1, oppP2],
+                                        apex: apex,
+                                        badgeClass: 'bg-rose-50 text-rose-700 border-rose-200'
+                                    });
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // 3. ヨード (Yod / 神の指)
+            for (let i = 0; i < n; i++) {
+                for (let j = i + 1; j < n; j++) {
+                    if (!hasAspect(pList[i], pList[j], 60, 5)) continue;
+                    for (let k = 0; k < n; k++) {
+                        if (k === i || k === j) continue;
+                        const apex = pList[k];
+                        if (hasAspect(apex, pList[i], 150, 4) && hasAspect(apex, pList[j], 150, 4)) {
+                            const yKey = `Yod-${[pList[i].id, pList[j].id].sort().join('-')}-${apex.id}`;
+                            if (!seenKeys.has(yKey)) {
+                                seenKeys.add(yKey);
+                                patterns.push({
+                                    type: 'Yod',
+                                    nameJa: `ヨード (Apex: ${apex.id})`,
+                                    nameEn: `Yod (Apex: ${apex.id})`,
+                                    planets: [pList[i], pList[j]],
+                                    apex: apex,
+                                    badgeClass: 'bg-purple-50 text-purple-700 border-purple-200'
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+
+            // 4. ミスティック・レクタングル
+            for (let i = 0; i < n; i++) {
+                for (let j = i + 1; j < n; j++) {
+                    if (!hasAspect(pList[i], pList[j], 180, 8)) continue;
+                    for (let k = i + 1; k < n; k++) {
+                        if (k === j) continue;
+                        for (let m = k + 1; m < n; m++) {
+                            if (m === j) continue;
+                            if (!hasAspect(pList[k], pList[m], 180, 8)) continue;
+                            const p1 = pList[i], p2 = pList[j], p3 = pList[k], p4 = pList[m];
+                            const cond1 = hasAspect(p1, p3, 60, 6) && hasAspect(p3, p2, 120, 7) && hasAspect(p2, p4, 60, 6) && hasAspect(p4, p1, 120, 7);
+                            const cond2 = hasAspect(p1, p4, 60, 6) && hasAspect(p4, p2, 120, 7) && hasAspect(p2, p3, 60, 6) && hasAspect(p3, p1, 120, 7);
+                            if (cond1 || cond2) {
+                                const mrKey = `MR-${[p1.id, p2.id, p3.id, p4.id].sort().join('-')}`;
+                                if (!seenKeys.has(mrKey)) {
+                                    seenKeys.add(mrKey);
+                                    patterns.push({
+                                        type: 'MysticRectangle',
+                                        nameJa: 'ミスティック・レクタングル',
+                                        nameEn: 'Mystic Rectangle',
+                                        planets: [p1, p2, p3, p4],
+                                        badgeClass: 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                                    });
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return patterns;
+        }
+
+        let planetData = [], ascendantDeg = 0, mcDeg = 0, hitZones = [], isPlaying = false, animationFrameId = null, lastTimestamp = 0;
+        let animWallTime = null, detectedPatterns = [];
 
         // --- ロジック実装 ---
         window.onload = () => {
             const canvas = document.getElementById('horoscopeCanvas');
-            initTimezoneSelect(); setNow(); initCitySelect(); renderAspectToggles(); updateStaticLabels(); initRealtimeUpdates();
+            initTimezoneSelect(); setNow(); initCitySelect(); initSpeedSelect(); renderAspectToggles(); updateStaticLabels(); initRealtimeUpdates();
             function resizeCanvas() { canvas.width = canvas.parentElement.clientWidth * window.devicePixelRatio; canvas.height = canvas.parentElement.clientWidth * window.devicePixelRatio; if (planetData.length > 0) drawChart(); }
             window.addEventListener('resize', resizeCanvas); resizeCanvas();
             canvas.addEventListener('mousemove', handleMouseMove);
@@ -304,9 +650,34 @@
 
         function setText(id, text) { const el = document.getElementById(id); if (el) el.innerText = text; }
 
+        function initSpeedSelect() {
+            updateSpeedOptions();
+            const s = document.getElementById('playSpeed');
+            if (s) {
+                s.value = selectedSpeed;
+                s.onchange = (e) => { selectedSpeed = parseFloat(e.target.value); };
+            }
+        }
+
+        function updateSpeedOptions() {
+            const s = document.getElementById('playSpeed');
+            if (!s) return;
+            const curVal = s.value || selectedSpeed;
+            const t = i18n[currentLang].speeds;
+            s.innerHTML = SPEED_OPTIONS.map(opt => `<option value="${opt.value}">${t[opt.key]}</option>`).join('');
+            s.value = curVal;
+        }
+
         function updateStaticLabels() {
             const t = i18n[currentLang];
-            setText('ui-title', t.title); setText('ui-subtitle', t.subtitle); setText('label-datetime', t.labelDateTime); setText('label-tz-header', t.labelTz); setText('label-settings-modal', t.labelSettingsModal); setText('label-rotation', t.labelRotation); setText('label-show-asc-line', t.labelShowAscLine); setText('label-city', t.labelCity); setText('label-lat', t.labelLat); setText('label-lon', t.labelLon); setText('setNowBtn', t.setNow); setText('label-data-header', t.dataHeader); setText('label-settings', t.labelSettings); setText('label-tz-modal', t.labelTz); setText('label-jp-calendar', t.labelJpCalendar);
+            setText('ui-title', t.title); setText('ui-subtitle', t.subtitle); setText('label-datetime', t.labelDateTime); setText('label-tz-header', t.labelTz); setText('label-settings-modal', t.labelSettingsModal); setText('label-rotation', t.labelRotation); 
+            setText('label-show-asc-line', t.labelShowAscLine); setText('label-show-mc-line', t.labelShowMcLine); 
+            setText('label-show-retrograde', t.labelShowRetrograde); setText('label-show-elements', t.labelShowElements);
+            setText('label-show-dignities', t.labelShowDignities); setText('label-show-patterns', t.labelShowPatterns);
+            setText('label-elements-header', t.labelElementsHeader); setText('label-4elements', t.label4Elements); setText('label-3qualities', t.label3Qualities);
+            setText('label-dignity-legend', t.labelDignityLegend);
+            setText('label-city', t.labelCity); setText('label-lat', t.labelLat); setText('label-lon', t.labelLon); setText('setNowBtn', t.setNow); setText('label-data-header', t.dataHeader); setText('label-settings', t.labelSettings); setText('label-tz-modal', t.labelTz); setText('label-jp-calendar', t.labelJpCalendar);
+            updateSpeedOptions();
         }
 
         function updateJapanCalendar(astroTime, sunLon) {
@@ -339,8 +710,6 @@
                 ctx.fillStyle = ELEMENT_COLORS[SIGN_ELEMENTS[i]]; ctx.fill();
             }
             ctx.beginPath(); ctx.arc(center, center, innerRadius, 0, Math.PI * 2); ctx.fillStyle = "#ffffff"; ctx.fill();
-
-            const pOrder = { "Sun": 0, "Mercury": 1, "Venus": 2, "Moon": 3, "Mars": 4, "Ceres": 4.8, "Pallas": 4.9, "Juno": 5.0, "Vesta": 5.1, "Jupiter": 6, "Saturn": 7, "Chiron": 7.5, "Uranus": 8, "Neptune": 9, "Pluto": 10 };
             const orbMaxR = innerRadius * 0.92, orbMinR = innerRadius * 0.20;
             ctx.lineWidth = 0.5; ctx.strokeStyle = '#f1f5f9'; 
             for (let i = 0; i <= 10; i++) { ctx.beginPath(); ctx.arc(center, center, orbMinR + (i / 10) * (orbMaxR - orbMinR), 0, Math.PI * 2); ctx.stroke(); }
@@ -361,9 +730,23 @@
                 ctx.fillStyle = '#ef4444'; ctx.font = `bold 15px ${fontSans}`; ctx.fillText('ASC', center + Math.cos(adA) * (innerRadius + 18), center + Math.sin(adA) * (innerRadius + 18) + 5);
             }
 
+            if (showMcLine) {
+                const mcA = Math.PI - (mcDeg * Math.PI / 180 - rotBase);
+                ctx.beginPath(); ctx.strokeStyle = '#3b82f6'; ctx.lineWidth = 1.8; ctx.setLineDash([5, 3]); ctx.moveTo(center + Math.cos(mcA) * innerRadius, center + Math.sin(mcA) * innerRadius); ctx.lineTo(center + Math.cos(mcA + Math.PI) * innerRadius, center + Math.sin(mcA + Math.PI) * innerRadius); ctx.stroke(); ctx.setLineDash([]);
+                ctx.fillStyle = '#3b82f6'; ctx.font = `bold 14px ${fontSans}`; ctx.fillText('MC', center + Math.cos(mcA) * (innerRadius + 18), center + Math.sin(mcA) * (innerRadius + 18) + 5);
+            }
+
+            const pOrder = { 
+                "Sun": 0, "Mercury": 1, "Venus": 2, "Moon": 3, 
+                "Fortune": 3.4, "Node": 3.5, "SouthNode": 3.6, "Lilith": 3.8,
+                "Mars": 4, "Ceres": 4.8, "Pallas": 4.9, "Juno": 5.0, "Vesta": 5.1, 
+                "Jupiter": 6, "Saturn": 7, "Chiron": 7.5, "Uranus": 8, "Neptune": 9, "Pluto": 10 
+            };
+
+            const MINOR_IDS = ["Ceres","Pallas","Juno","Vesta","Node","SouthNode","Lilith","Fortune"];
             const mR = innerRadius * 0.98; ctx.globalAlpha = 0.5;
             for (let i = 0; i < planetData.length; i++) { for (let j = i + 1; j < planetData.length; j++) {
-                const p1 = planetData[i], p2 = planetData[j]; if(["Ceres","Pallas","Juno","Vesta"].includes(p1.id) || ["Ceres","Pallas","Juno","Vesta"].includes(p2.id)) continue;
+                const p1 = planetData[i], p2 = planetData[j]; if(MINOR_IDS.includes(p1.id) && MINOR_IDS.includes(p2.id)) continue;
                 ASPECT_DEFS.forEach(asp => {
                     if (!aspectVisibility[asp.id]) return;
                     const diff = Math.abs(p1.longitude - p2.longitude), orb = Math.abs((diff > 180 ? 360 - diff : diff) - asp.angle);
@@ -381,38 +764,170 @@
                 ctx.beginPath(); ctx.fillStyle = p.color; ctx.arc(mx, my, 2.5, 0, Math.PI * 2); ctx.fill();
                 ctx.beginPath(); ctx.arc(sx, sy, 13, 0, Math.PI * 2); ctx.fillStyle = "rgba(255,255,255,0.9)"; ctx.fill();
                 ctx.fillStyle = p.color; ctx.font = `400 26px ${fontSans}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(p.symbol, sx, sy);
+
+                // 逆行記号 (℞)
+                if (showRetrograde && p.isRetrograde) {
+                    ctx.save();
+                    ctx.fillStyle = "#e11d48";
+                    ctx.font = `bold 12px ${fontSans}`;
+                    ctx.textAlign = 'left';
+                    ctx.textBaseline = 'bottom';
+                    ctx.fillText('℞', sx + 9, sy - 4);
+                    ctx.restore();
+                }
+
                 hitZones.push({ x: sx, y: sy, r: 16, data: p });
             });
         }
 
         // --- ヘルパー関数 ---
         function initTimezoneSelect() { document.getElementById('timezone').innerHTML = TIMEZONES.map(tz => `<option value="${tz.offset}" ${tz.offset === 9 ? 'selected' : ''}>${tz.name}</option>`).join(''); }
-        function initRealtimeUpdates() { ['targetDate', 'targetTime', 'lat', 'lon'].forEach(id => document.getElementById(id).addEventListener('input', () => { if (id === 'lat' || id === 'lon') document.getElementById('citySelect').value = "manual"; calculateHoroscope(); })); document.getElementById('rotationSelect').onchange = (e) => { chartRotationMode = e.target.value; drawChart(); }; document.getElementById('toggleAscLine').onchange = (e) => { showAscLine = e.target.checked; drawChart(); }; }
+        function initRealtimeUpdates() { 
+            ['targetDate', 'targetTime', 'lat', 'lon'].forEach(id => document.getElementById(id).addEventListener('input', () => { if (id === 'lat' || id === 'lon') document.getElementById('citySelect').value = "manual"; calculateHoroscope(); })); 
+            document.getElementById('rotationSelect').onchange = (e) => { chartRotationMode = e.target.value; drawChart(); }; 
+            document.getElementById('toggleAscLine').onchange = (e) => { showAscLine = e.target.checked; drawChart(); }; 
+            document.getElementById('toggleMcLine').onchange = (e) => { showMcLine = e.target.checked; drawChart(); }; 
+            document.getElementById('toggleRetrograde').onchange = (e) => { showRetrograde = e.target.checked; updateUI(); drawChart(); }; 
+            document.getElementById('toggleElements').onchange = (e) => { showElements = e.target.checked; updateUI(); }; 
+            document.getElementById('toggleDignities').onchange = (e) => { showDignities = e.target.checked; updateUI(); }; 
+            document.getElementById('togglePatterns').onchange = (e) => { showPatterns = e.target.checked; updateUI(); }; 
+        }
         function initCitySelect() { const s = document.getElementById('citySelect'); updateCityOptions(); s.value = "kyoto"; s.onchange = (e) => { const c = CITY_DATA.find(x => x.id === e.target.value); if (c && c.lat !== null) { document.getElementById('lat').value = c.lat; document.getElementById('lon').value = c.lon; calculateHoroscope(); } }; }
         function updateCityOptions() { document.getElementById('citySelect').innerHTML = CITY_DATA.map(c => `<option value="${c.id}">${currentLang === 'ja' ? c.nameJa : c.nameEn}</option>`).join(''); }
         function renderAspectToggles() { const c = document.getElementById('aspect-toggles'), t = i18n[currentLang]; c.innerHTML = ASPECT_DEFS.map(asp => `<div class="flex items-center justify-between"><span class="text-xs font-bold text-slate-700">${t.aspectNames[asp.id]}</span><label class="switch"><input type="checkbox" id="toggle-${asp.id}" ${aspectVisibility[asp.id] ? 'checked' : ''}><span class="slider"></span></label></div>`).join(''); ASPECT_DEFS.forEach(asp => { document.getElementById(`toggle-${asp.id}`).onchange = (e) => { aspectVisibility[asp.id] = e.target.checked; updateUI(); drawChart(); }; }); }
         function toggleLanguage() { currentLang = currentLang === 'ja' ? 'en' : 'ja'; updateStaticLabels(); updateCityOptions(); renderAspectToggles(); updateUI(); drawChart(); }
         function setNow() { const n = new Date(), o = parseFloat(document.getElementById('timezone').value) || 0, d = new Date(n.getTime() + (o * 3600000)); document.getElementById('targetDate').value = d.toISOString().split('T')[0]; document.getElementById('targetTime').value = d.toISOString().split('T')[1].substring(0, 5); }
-        function togglePlay() { isPlaying = !isPlaying; const b = document.getElementById('togglePlayBtn'); if (isPlaying) { b.classList.add('playing-indicator'); document.getElementById('icon-play').classList.add('hidden'); document.getElementById('icon-pause').classList.remove('hidden'); lastTimestamp = performance.now(); animationFrameId = requestAnimationFrame(animate); } else { b.classList.remove('playing-indicator'); document.getElementById('icon-play').classList.remove('hidden'); document.getElementById('icon-pause').classList.add('hidden'); if (animationFrameId) cancelAnimationFrame(animationFrameId); } }
-        function animate(t) { if (!isPlaying) return; const d = t - (lastTimestamp || t); lastTimestamp = t; const c = new Date(`${document.getElementById('targetDate').value}T${document.getElementById('targetTime').value}:00Z`).getTime(); if (!isNaN(c)) { const nt = new Date(c + d * 86400); document.getElementById('targetDate').value = nt.toISOString().split('T')[0]; document.getElementById('targetTime').value = nt.toISOString().split('T')[1].substring(0, 5); calculateHoroscope(); } animationFrameId = requestAnimationFrame(animate); }
+        function togglePlay() { 
+            isPlaying = !isPlaying; const b = document.getElementById('togglePlayBtn'); 
+            if (isPlaying) { 
+                b.classList.add('playing-indicator'); 
+                document.getElementById('icon-play').classList.add('hidden'); 
+                document.getElementById('icon-pause').classList.remove('hidden'); 
+                const dStr = document.getElementById('targetDate').value;
+                const tStr = document.getElementById('targetTime').value;
+                if (dStr && tStr) {
+                    animWallTime = new Date(`${dStr}T${tStr.length === 5 ? tStr + ':00' : tStr}Z`).getTime();
+                } else {
+                    animWallTime = Date.now();
+                }
+                lastTimestamp = performance.now(); 
+                animationFrameId = requestAnimationFrame(animate); 
+            } else { 
+                b.classList.remove('playing-indicator'); 
+                document.getElementById('icon-play').classList.remove('hidden'); 
+                document.getElementById('icon-pause').classList.add('hidden'); 
+                if (animationFrameId) cancelAnimationFrame(animationFrameId); 
+            } 
+        }
+
+        function animate(t) { 
+            if (!isPlaying) return; 
+            const d = t - (lastTimestamp || t); 
+            lastTimestamp = t; 
+            const speedRatio = parseFloat(document.getElementById('playSpeed')?.value) || selectedSpeed;
+            if (animWallTime !== null) {
+                animWallTime += d * speedRatio;
+                const nt = new Date(animWallTime);
+                const iso = nt.toISOString();
+                const dateStr = iso.split('T')[0];
+                const timeStr = iso.split('T')[1].substring(0, 5);
+                const dEl = document.getElementById('targetDate');
+                const tEl = document.getElementById('targetTime');
+                if (dEl && dEl.value !== dateStr) dEl.value = dateStr;
+                if (tEl && tEl.value !== timeStr) tEl.value = timeStr;
+                calculateHoroscope(animWallTime);
+            }
+            animationFrameId = requestAnimationFrame(animate); 
+        }
+
         function handleMouseMove(e) {
             const c = document.getElementById('horoscopeCanvas'), rect = c.getBoundingClientRect();
             const x = (e.clientX - rect.left) * (c.width / rect.width / window.devicePixelRatio), y = (e.clientY - rect.top) * (c.height / rect.height / window.devicePixelRatio);
             const tt = document.getElementById('tooltip'); let f = false;
-            for (const z of hitZones) { if (Math.sqrt((x - z.x)**2 + (y - z.y)**2) <= z.r) { f = true; const pl = z.data, lang = i18n[currentLang]; const hs = (Math.floor(pl.longitude / 30) - Math.floor(ascendantDeg / 30) + 12) % 12 + 1; tt.innerHTML = `<h4>${lang.planets[pl.id]} ${pl.symbol}</h4><p>${lang.signs[Math.floor(pl.longitude / 30)]} ${(pl.longitude % 30).toFixed(2)}°</p><p>第${hs}ハウス</p>`; tt.style.display = 'block'; tt.style.left = e.clientX + 'px'; tt.style.top = e.clientY + 'px'; break; } }
+            for (const z of hitZones) { 
+                if (Math.sqrt((x - z.x)**2 + (y - z.y)**2) <= z.r) { 
+                    f = true; 
+                    const pl = z.data, lang = i18n[currentLang]; 
+                    const hs = (Math.floor(pl.longitude / 30) - Math.floor(ascendantDeg / 30) + 12) % 12 + 1;
+                    const retroBadge = pl.isRetrograde ? `<span class="text-rose-500 font-bold ml-1">℞ (逆行中)</span>` : '';
+                    const digText = pl.dignity ? `<span class="text-indigo-600 font-bold ml-1">${pl.dignity.icon} ${currentLang === 'ja' ? pl.dignity.labelJa : pl.dignity.labelEn}</span>` : '';
+                    tt.innerHTML = `<h4>${lang.planets[pl.id]} ${pl.symbol} ${retroBadge}</h4><p>${lang.signs[Math.floor(pl.longitude / 30)]} ${(pl.longitude % 30).toFixed(2)}° ${digText}</p><p>第${hs}ハウス</p>`; 
+                    tt.style.display = 'block'; 
+                    tt.style.left = e.clientX + 'px'; 
+                    tt.style.top = e.clientY + 'px'; 
+                    break; 
+                } 
+            }
             if (!f) tt.style.display = 'none';
         }
-        function calculateHoroscope() {
+
+        function calculateHoroscope(customWallMs) {
             try {
                 const d = document.getElementById('targetDate').value, tm = document.getElementById('targetTime').value, o = parseFloat(document.getElementById('timezone').value) || 0, lat = parseFloat(document.getElementById('lat').value), lon = parseFloat(document.getElementById('lon').value);
-                if (!d || !tm) return; const utc = new Date(`${d}T${tm}:00Z`).getTime() - (o * 3600000), utcD = new Date(utc), aT = Astronomy.MakeTime(utcD), gmst = Astronomy.SiderealTime(utcD);
+                if (!d || !tm) return; 
+                const wallMs = typeof customWallMs === 'number' ? customWallMs : new Date(`${d}T${tm}:00Z`).getTime();
+                const utc = wallMs - (o * 3600000), utcD = new Date(utc), aT = Astronomy.MakeTime(utcD), gmst = Astronomy.SiderealTime(utcD);
+                
+                // 2時間前の天文時刻 (逆行判定用)
+                const prevAT = Astronomy.MakeTime(new Date(utc - 7200000));
+
                 const lstR = (gmst + (lon / 15.0)) * 15 * Math.PI / 180, eps = 23.4393 * Math.PI / 180, lR = lat * Math.PI / 180;
                 ascendantDeg = (Math.atan2(Math.cos(lstR), -(Math.sin(lstR) * Math.cos(eps) + Math.tan(lR) * Math.sin(eps))) * 180 / Math.PI + 360) % 360;
+                mcDeg = (Math.atan2(Math.sin(lstR), Math.cos(lstR) * Math.cos(eps)) * 180 / Math.PI + 360) % 360;
+                
                 const getL = (b, t) => { const v = Astronomy.GeoVector(b, t, true), e = 23.4392911 * Math.PI / 180; return (Math.atan2(v.y * Math.cos(e) + v.z * Math.sin(e), v.x) * 180 / Math.PI + 0.0139688 * (t.ut / 365.25) + 360) % 360; };
-                planetData = PLANET_DEFS.map(p => ({ ...p, longitude: ["Ceres","Pallas","Juno","Vesta","Chiron"].includes(p.id) ? getAsteroidLongitude(p.id, aT) : getL(Astronomy.Body[p.id] || Astronomy.Body.Sun, aT) }));
-                updateJapanCalendar(aT, getL(Astronomy.Body.Sun, aT)); updateUI(); drawChart();
+                const sunLon = getL(Astronomy.Body.Sun, aT);
+                const moonLon = getL(Astronomy.Body.Moon, aT);
+
+                planetData = PLANET_DEFS.map(p => {
+                    let longitude = 0, isRetrograde = false;
+                    if (["Ceres","Pallas","Juno","Vesta","Chiron"].includes(p.id)) {
+                        longitude = getAsteroidLongitude(p.id, aT);
+                        const prevLon = getAsteroidLongitude(p.id, prevAT);
+                        isRetrograde = ((longitude - prevLon + 360) % 360) > 180;
+                    } else if (["Node","SouthNode","Lilith","Fortune"].includes(p.id)) {
+                        longitude = getSensitivePointLongitude(p.id, aT, ascendantDeg, sunLon, moonLon);
+                        isRetrograde = false;
+                    } else {
+                        longitude = getL(Astronomy.Body[p.id] || Astronomy.Body.Sun, aT);
+                        if (p.id !== "Sun" && p.id !== "Moon") {
+                            const prevLon = getL(Astronomy.Body[p.id] || Astronomy.Body.Sun, prevAT);
+                            isRetrograde = ((longitude - prevLon + 360) % 360) > 180;
+                        }
+                    }
+                    const signIdx = Math.floor(longitude / 30);
+                    const dignity = getDignity(p.id, signIdx);
+                    return { ...p, longitude, isRetrograde, dignity };
+                });
+
+                updateJapanCalendar(aT, sunLon); 
+                updateElementsAndQualities(planetData);
+                detectedPatterns = detectAspectPatterns(planetData);
+                renderAspectPatterns(detectedPatterns);
+                updateUI(); 
+                drawChart();
             } catch (e) { console.error(e); }
         }
+
+        function getSensitivePointLongitude(id, aT, asc, sunLon, moonLon) {
+            const T = aT.ut / 36525.0;
+            if (id === "Node") return (125.04452 - 1934.136261 * T + 0.0020708 * T * T + 360000) % 360;
+            if (id === "SouthNode") {
+                const node = (125.04452 - 1934.136261 * T + 0.0020708 * T * T + 360000) % 360;
+                return (node + 180) % 360;
+            }
+            if (id === "Lilith") {
+                const perigee = (83.353243 + 4069.013711 * T - 0.0103238 * T * T + 360000) % 360;
+                return (perigee + 180) % 360;
+            }
+            if (id === "Fortune") {
+                const diff = (asc - sunLon + 360) % 360;
+                const isDay = diff > 0 && diff < 180;
+                return isDay ? (asc + moonLon - sunLon + 720) % 360 : (asc + sunLon - moonLon + 720) % 360;
+            }
+            return 0;
+        }
+
         function solveKepler(M, e) { let E = M * Math.PI / 180; for (let i = 0; i < 10; i++) E = E - (E - e * Math.sin(E) - M * Math.PI / 180) / (1 - e * Math.cos(E)); return E; }
         function getAsteroidLongitude(id, t) {
             const el = ASTEROID_ELEMENTS[id]; if (!el) return 0; const n = 0.9856076686 / Math.pow(el.a, 1.5);
@@ -420,11 +935,151 @@
             const xh = r * (Math.cos(N) * Math.cos(u) - Math.sin(N) * Math.sin(u) * Math.cos(i)), yh = r * (Math.sin(N) * Math.cos(u) + Math.cos(N) * Math.sin(u) * Math.cos(i)), zh = r * (Math.sin(u) * Math.sin(i)), ev = Astronomy.HelioVector(Astronomy.Body.Earth, t);
             return (Math.atan2(yh - ev.y, xh - ev.x) * 180 / Math.PI + 0.0139688 * (t.ut / 365.25) + 360) % 360;
         }
+
+        function updateElementsAndQualities(planets) {
+            const { elements, qualities } = countElementsAndQualities(planets);
+            const t = i18n[currentLang];
+            
+            const elemDefs = [
+                { key: 'Fire', icon: '🔥', name: t.elementNames.Fire, count: elements.Fire, cls: 'bg-amber-50 text-amber-800 border-amber-200' },
+                { key: 'Earth', icon: '🌍', name: t.elementNames.Earth, count: elements.Earth, cls: 'bg-emerald-50 text-emerald-800 border-emerald-200' },
+                { key: 'Air', icon: '💨', name: t.elementNames.Air, count: elements.Air, cls: 'bg-sky-50 text-sky-800 border-sky-200' },
+                { key: 'Water', icon: '💧', name: t.elementNames.Water, count: elements.Water, cls: 'bg-blue-50 text-blue-800 border-blue-200' }
+            ];
+
+            const qualDefs = [
+                { key: 'Cardinal', icon: '⚡', name: t.qualityNames.Cardinal, count: qualities.Cardinal, cls: 'bg-rose-50 text-rose-800 border-rose-200' },
+                { key: 'Fixed', icon: '⚓', name: t.qualityNames.Fixed, count: qualities.Fixed, cls: 'bg-indigo-50 text-indigo-800 border-indigo-200' },
+                { key: 'Mutable', icon: '🔄', name: t.qualityNames.Mutable, count: qualities.Mutable, cls: 'bg-teal-50 text-teal-800 border-teal-200' }
+            ];
+
+            const elGrid = document.getElementById('elementsGrid');
+            if (elGrid) {
+                elGrid.innerHTML = elemDefs.map(e => `
+                    <div class="p-1.5 rounded border flex flex-col items-center justify-center ${e.cls}">
+                        <span class="text-[10px] leading-tight">${e.icon} ${e.name}</span>
+                        <span class="text-sm font-extrabold leading-none mt-0.5">${e.count}</span>
+                    </div>
+                `).join('');
+            }
+
+            const quGrid = document.getElementById('qualitiesGrid');
+            if (quGrid) {
+                quGrid.innerHTML = qualDefs.map(q => `
+                    <div class="p-1.5 rounded border flex flex-col items-center justify-center ${q.cls}">
+                        <span class="text-[10px] leading-tight">${q.icon} ${q.name}</span>
+                        <span class="text-sm font-extrabold leading-none mt-0.5">${q.count}</span>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function renderAspectPatterns(patterns) {
+            const area = document.getElementById('aspectPatternsArea');
+            if (!area) return;
+            const t = i18n[currentLang];
+            if (!patterns || patterns.length === 0) {
+                area.innerHTML = `<span class="text-xs text-slate-400 italic">${t.patterns.none}</span>`;
+                return;
+            }
+            area.innerHTML = `
+                <span class="text-xs font-bold text-slate-500 uppercase tracking-wider mr-2">${t.labelShowPatterns}:</span>
+                ` + patterns.map((p, idx) => {
+                    const pNames = p.planets.map(pl => t.planets[pl.id] || pl.id).join('・');
+                    const displayName = currentLang === 'ja' ? p.nameJa : p.nameEn;
+                    return `
+                        <button type="button" class="px-2.5 py-1 rounded-md border text-xs font-bold flex items-center gap-1.5 shadow-2xs hover:opacity-80 active:scale-95 transition ${p.badgeClass}" onclick="showPatternDetail(${idx})">
+                            <span>${displayName}</span>
+                            <span class="text-[10px] opacity-75 font-normal">(${pNames})</span>
+                        </button>
+                    `;
+                }).join('');
+        }
+
+        function showPatternDetail(idx) {
+            const p = detectedPatterns[idx];
+            if (!p) return;
+            const t = i18n[currentLang];
+            const pNames = p.planets.map(pl => `${pl.symbol} ${t.planets[pl.id]}`).join(', ');
+            
+            const descJa = {
+                GrandTrine: "同一エレメントの3天体が美しい正三角形を結び、調和と天賦の才、順調なエネルギー循環を示します。",
+                Kite: "グランドトラインにオポジションの緊張が加わり、才能を現実社会で強力に発揮・突破する推進力を生み出します。",
+                TSquare: "直角二等辺三角形の配置。強い緊張と葛藤を与えますが、頂点(Apex)の天体を通じて偉大な成果を達成する原動力になります。",
+                GrandCross: "4天体が十字架のように緊張し合う強烈な配置。重い人生の試練を超えた先に、圧倒的な変革力を発揮します。",
+                Yod: "2天体の調和に対して頂点天体が特別な調整を迫る配置。神の指と呼ばれ、特別な宿命や特異な才能を示します。",
+                MysticRectangle: "神秘の長方形。緊張と調和が高度にバランスし、困難を形にして解決する卓越した実務能力を発揮します。"
+            };
+
+            const descEn = {
+                GrandTrine: "An equilateral triangle in harmonious elements, showing innate talents and smooth energy flow.",
+                Kite: "A Grand Trine with an opposition providing direction, creating breakthrough momentum to manifest talents.",
+                TSquare: "A dynamic right-angled triangle creating intense tension, acting as a powerhouse for great achievements through the apex planet.",
+                GrandCross: "A cruciform pattern of great tension, representing major life challenges and monumental transformation once mastered.",
+                Yod: "The Finger of God, demanding fine-tuning of the apex planet towards a unique life purpose.",
+                MysticRectangle: "A harmonic rectangle blending tension with ease, granting remarkable practical problem-solving gifts."
+            };
+
+            const name = currentLang === 'ja' ? p.nameJa : p.nameEn;
+            const desc = (currentLang === 'ja' ? descJa[p.type] : descEn[p.type]) || "";
+            alert(`【${name}】\n構成天体: ${pNames}\n\n${desc}`);
+        }
+
         function updateUI() {
-            const t = i18n[currentLang]; setText('ascendant-info', `${t.asc}: ${t.signs[Math.floor(ascendantDeg / 30)]} ${(ascendantDeg % 30).toFixed(2)}°`);
-            document.getElementById('planetList').innerHTML = planetData.map(p => `<div class="flex justify-between border-b border-slate-50 pb-0.5"><span>${p.symbol} ${t.planets[p.id]}</span><span class="font-mono text-[10px] text-slate-500">${t.signs[Math.floor(p.longitude / 30)]} ${(p.longitude % 30).toFixed(1)}°</span></div>`).join('');
+            const t = i18n[currentLang]; 
+            setText('ascendant-info', `${t.asc}: ${t.signs[Math.floor(ascendantDeg / 30)]} ${(ascendantDeg % 30).toFixed(2)}° | ${t.mc}: ${t.signs[Math.floor(mcDeg / 30)]} ${(mcDeg % 30).toFixed(2)}°`);
+            
+            // 表示非表示トグルの反映
+            const elCard = document.getElementById('elementsCard');
+            if (elCard) elCard.style.display = showElements ? '' : 'none';
+            
+            const patArea = document.getElementById('aspectPatternsArea');
+            if (patArea) patArea.style.display = showPatterns ? '' : 'none';
+
+            const digLeg = document.getElementById('label-dignity-legend');
+            if (digLeg) digLeg.style.display = showDignities ? '' : 'none';
+
+            document.getElementById('planetList').innerHTML = planetData.map(p => {
+                const retroBadge = (showRetrograde && p.isRetrograde) 
+                    ? `<span class="text-[10px] font-bold text-rose-500 bg-rose-50 border border-rose-200 px-1 rounded shadow-2xs" title="逆行中 (Retrograde)">℞</span>` 
+                    : '';
+                const dignityBadge = (showDignities && p.dignity)
+                    ? `<span class="text-[9px] font-bold px-1 rounded border ${p.dignity.color}">${p.dignity.icon} ${currentLang === 'ja' ? p.dignity.labelJa : p.dignity.labelEn}</span>`
+                    : '';
+
+                return `
+                <div class="flex justify-between items-center border-b border-slate-50 py-1 hover:bg-slate-50 px-1 rounded transition">
+                    <div class="flex items-center gap-1.5">
+                        <span class="text-sm font-serif" style="color:${p.color}">${p.symbol}</span>
+                        <span class="font-medium text-slate-700">${t.planets[p.id]}</span>
+                        ${retroBadge}
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                        ${dignityBadge}
+                        <span class="font-mono text-[10px] text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded">
+                            ${t.signs[Math.floor(p.longitude / 30)]} ${(p.longitude % 30).toFixed(1)}°
+                        </span>
+                    </div>
+                </div>
+            `;
+            }).join('');
+
+            const MINOR_IDS = ["Ceres","Pallas","Juno","Vesta","Node","SouthNode","Lilith","Fortune"];
             let aF = false, aH = `<p class="col-span-full font-bold border-b border-slate-100 pb-1 mb-1 uppercase text-[10px] text-slate-400">${t.aspectHeader}</p>`;
-            for (let i = 0; i < planetData.length; i++) { for (let j = i + 1; j < planetData.length; j++) { const p1 = planetData[i], p2 = planetData[j]; if(["Ceres","Pallas","Juno","Vesta"].includes(p1.id) || ["Ceres","Pallas","Juno","Vesta"].includes(p2.id)) continue; ASPECT_DEFS.forEach(asp => { if (!aspectVisibility[asp.id]) return; const diff = Math.abs(p1.longitude - p2.longitude), orb = Math.abs((diff > 180 ? 360 - diff : diff) - asp.angle); if (orb <= asp.orb) { aF = true; aH += `<div class="flex justify-between items-center text-[10px]"><span class="truncate"><span style="color:${p1.color}">${p1.symbol}</span> ${asp.id.substring(0,3)} <span style="color:${p2.color}">${p2.symbol}</span></span><span class="text-slate-400">${orb.toFixed(1)}°</span></div>`; } }); } }
+            for (let i = 0; i < planetData.length; i++) { 
+                for (let j = i + 1; j < planetData.length; j++) { 
+                    const p1 = planetData[i], p2 = planetData[j]; 
+                    if(MINOR_IDS.includes(p1.id) && MINOR_IDS.includes(p2.id)) continue; 
+                    ASPECT_DEFS.forEach(asp => { 
+                        if (!aspectVisibility[asp.id]) return; 
+                        const diff = Math.abs(p1.longitude - p2.longitude), orb = Math.abs((diff > 180 ? 360 - diff : diff) - asp.angle); 
+                        if (orb <= asp.orb) { 
+                            aF = true; 
+                            aH += `<div class="flex justify-between items-center text-[10px] bg-slate-50 p-1 rounded border border-slate-100"><span class="truncate"><span style="color:${p1.color}">${p1.symbol}</span> ${asp.id.substring(0,3)} <span style="color:${p2.color}">${p2.symbol}</span></span><span class="text-slate-400 font-mono">${orb.toFixed(1)}°</span></div>`; 
+                        } 
+                    }); 
+                } 
+            }
             document.getElementById('aspectResults').innerHTML = aF ? aH : `<p class="text-slate-300 italic text-center col-span-full py-2">${t.noAspects}</p>`;
         }
     </script>
